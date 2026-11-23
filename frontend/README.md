@@ -1,28 +1,32 @@
 # ATLAS Web
 
-The first TypeScript + React interface for Project ATLAS.
+The TypeScript + React interface for Project ATLAS.
 
 ## Requirements
 
 - Node.js 20 or newer
 - npm
 
-## Run locally
+## Run locally (Windows PowerShell)
 
 From this directory:
 
 ```powershell
-npm install
-npm run dev
+npm.cmd install
+npm.cmd run typecheck
+npm.cmd run build
+npm.cmd run dev
 ```
+
+Using `npm.cmd` avoids PowerShell's script-execution restriction on the `npm.ps1` shim without changing the machine's execution policy.
 
 Open the local URL printed by Vite (normally http://127.0.0.1:5173).
 
-## Verify
+## Current functionality
 
-```powershell
-npm run typecheck
-npm run build
-```
+- Interactive global 2D map using Leaflet and OpenStreetMap tiles.
+- Selectable map markers, category filters and event/region search.
+- Selected-record detail panel and source-connection status view.
+- Clearly labelled demonstration records only.
 
-This is the initial application shell. The module cards are roadmap placeholders, not live monitoring capabilities yet.
+External live intelligence providers are not connected yet. The map's sample records are not live reports or operational warnings.
