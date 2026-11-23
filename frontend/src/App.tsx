@@ -24,12 +24,13 @@ function EventMap({events,selected,onSelect}:{events:AtlasEvent[];selected:Atlas
   </MapContainer>;
 }
 export default function App() {
-  const [category,setCategory]=useState("All"); const [query,setQuery]=useState(""); const [selectedId,setSelectedId]=useState<string|null>("EVT-001"); const [panel,setPanel]=useState<"events"|"sources">("events");
+  const [category,setCategory]=useState("All"); const [query,setQuery]=useState(""); const [selectedId,setSelectedId]=useState<string|null>("EVT-001"); const [panel,setPanel]=useState<"events"|"sources">("events"); const [apiStatus,setApiStatus]=useState<"checking"|"online"|"offline">("checking");
+  useEffect(()=>{let active=true;fetch("http://127.0.0.1:8000/api/v1/health").then(response=>{if(!response.ok) throw new Error("API unavailable");return response.json();}).then(()=>{if(active)setApiStatus("online");}).catch(()=>{if(active)setApiStatus("offline");});return()=>{active=false;};},[]);
   const filtered=useMemo(()=>demoEvents.filter(event=>(category==="All"||event.category===category)&&(!query.trim()||`${event.title} ${event.region} ${event.category}`.toLowerCase().includes(query.trim().toLowerCase()))),[category,query]);
-  const selected=filtered.find(event=>event.id===selectedId)??filtered[0]??null;
+  const selected=selectedId===null?null:(filtered.find(event=>event.id===selectedId)??filtered[0]??null);
   return <main className="app-shell">
     <header className="topbar"><a className="brand" href="/" aria-label="ATLAS home"><span className="brand-mark">A</span><span>ATLAS</span></a><span className="topbar-label">GLOBAL INTELLIGENCE &amp; SITUATIONAL AWARENESS</span><div className="topbar-right"><span className="demo-pill"><i/> DEMONSTRATION MODE</span><span className="version">v0.2.0</span></div></header>
-    <section className="workspace-heading"><div><p className="eyebrow">OPERATIONS / GLOBAL VIEW</p><h1>World monitor</h1><p className="subheading">A unified geographic workspace for events, sources and context.</p></div><div className="workspace-meta"><span className="live-dot"/> LIVE DATA NOT CONNECTED <span className="meta-divider">/</span> {filtered.length} MAP RECORDS</div></section>
+    <section className="workspace-heading"><div><p className="eyebrow">OPERATIONS / GLOBAL VIEW</p><h1>World monitor</h1><p className="subheading">A unified geographic workspace for events, sources and context.</p></div><div className="workspace-meta"><span className="live-dot"/> API {apiStatus.toUpperCase()} · DEMO DATA ONLY <span className="meta-divider">/</span> {filtered.length} MAP RECORDS</div></section>
     <section className="dashboard"><aside className="sidebar">
       <div className="sidebar-tabs"><button className={panel==="events"?"tab active":"tab"} onClick={()=>setPanel("events")}>EVENTS <span>05</span></button><button className={panel==="sources"?"tab active":"tab"} onClick={()=>setPanel("sources")}>SOURCES</button></div>
       {panel==="events"?<><div className="search-wrap"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search events or regions…" aria-label="Search events or regions"/></div>
