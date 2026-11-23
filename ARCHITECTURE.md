@@ -1,36 +1,45 @@
-# ATLAS Architecture — v0.1.0
+# ATLAS Architecture — v0.2.0
 
 ## Architecture rule
 
-ATLAS is a multi-application, multi-service system. The repository's language percentage is a measurement of files and code currently committed; it is not a target architecture or a promise about the final language percentages.
+ATLAS is a multi-application, multi-service system. Language percentages reflect committed implementation, not planned components. Languages are introduced for real subsystem needs, never merely to inflate repository statistics.
 
-Languages are introduced when a real subsystem needs them. We will not add languages merely to inflate GitHub statistics.
+## Current and planned boundaries
 
-## Planned responsibility boundaries
-
-| Technology | Intended responsibility | Status |
+| Technology | Responsibility | Status |
 |---|---|---|
-| TypeScript + React | Web application, interactive map, dashboards and browser-side state | Initial scaffold committed |
-| HTML + CSS | Web document structure and presentation | Initial scaffold committed |
-| Python | Intelligence analysis, event enrichment, data science and selected API services | Initial API foundation committed |
-| SQL | Relational queries, schema and geospatial persistence | Planned; PostgreSQL/PostGIS evaluation |
-| Go | High-concurrency ingestion workers and long-running collectors, if operationally justified | Planned; not implemented |
-| Rust | Performance-sensitive stream/data processing and native desktop components where justified | Planned; not implemented |
-| Tauri | Windows desktop shell hosting the web UI, with Rust-backed native capabilities | Candidate; evaluate before adoption |
+| TypeScript + React | Web application, map, dashboards and browser state | Implemented foundation; interactive map and event filtering |
+| HTML + CSS | Web document structure and presentation | Implemented |
+| Python + FastAPI | Versioned API and future intelligence/data services | Implemented foundation; health and demonstration-event endpoints |
+| Leaflet + OpenStreetMap | Initial interactive 2D map and basemap | Implemented; review tile-provider terms before production scale |
+| SQL / PostgreSQL + PostGIS | Relational and geospatial persistence | Planned |
+| Go | High-concurrency ingestion workers where justified | Planned |
+| Rust + Tauri | Native desktop integration and Windows shell | Evaluation planned |
 
-## Shared platform
+## Service contracts
 
-The web and Windows clients will use documented service interfaces rather than maintaining separate copies of business logic. The backend will expose versioned APIs. Event records will retain source, timestamp, location, provenance and confidence/verification status.
+- `GET /api/v1/health` returns service status and UTC timestamp.
+- `GET /api/v1/events` currently returns explicitly labelled demonstration records.
+- Web and desktop clients will consume documented, versioned service interfaces.
+- Future event records must preserve source identity, source URL, observed/published timestamps, location, provenance and verification status.
+
+## Security and data integrity
+
+- External sources must be public, licensed or explicitly authorized.
+- Camera integrations must respect provider playback rules and privacy restrictions.
+- Secrets stay in environment variables or local secret files and never enter Git.
+- Demonstration data must never be represented as current intelligence.
+- Production integrations require source attribution, freshness checks, error handling and tests.
 
 ## Implementation gates
 
-1. Ship and type-check the TypeScript web foundation.
-2. Establish API contracts between the web client and Python service.
+1. Verify the web build and API tests in CI and on a Windows development machine.
+2. Connect the React client to the API.
 3. Add persistence and geospatial queries.
-4. Add Go only when measured ingestion concurrency or deployment needs justify a separate worker.
-5. Add Rust only for measured performance bottlenecks or native desktop integration.
-6. Select and implement the Windows shell after a small Tauri evaluation.
+4. Integrate public providers with documented rate limits and terms.
+5. Add separate ingestion services only when measured needs justify them.
+6. Evaluate Tauri for the Windows desktop client after the shared API is stable.
 
 ## Honest status
 
-A planned component is not an implemented component. The initial repository is not yet a complete global monitoring platform. Each capability will be marked implemented only after it has tests and has been exercised in a working environment.
+The map and API are foundations, not a complete global monitoring platform. No live intelligence provider is connected yet. Each capability is marked implemented only after tests and working-environment verification.
