@@ -15,6 +15,17 @@ ATLAS is an independent platform for bringing public and authorized global infor
 
 The goal is to cover the capabilities of established global monitoring platforms and extend them with a permission-aware live camera network and evidence-based cross-source analysis.
 
+## Current implementation
+
+**Implemented in the repository (not yet locally verified on every supported environment):**
+- TypeScript + React web application foundation.
+- Interactive Leaflet world map with selectable, searchable and filterable demonstration markers.
+- Event detail panel and source-status view.
+- FastAPI service with versioned health and demonstration-event endpoints.
+- Initial API tests and CI workflow.
+
+**Not connected yet:** live news, weather, earthquake, aviation, maritime, camera or other external intelligence providers. Map records are illustrative demonstration data, not live events.
+
 ## Development principles
 
 1. Preserve provenance for intelligence claims.
@@ -24,13 +35,19 @@ The goal is to cover the capabilities of established global monitoring platforms
 5. Keep secrets out of source control; use environment variables and local secret files.
 6. Build modularly, test continuously and document operational requirements.
 
-## Initial architecture
+## Run the applications
 
-The first milestone establishes a Python API foundation. Web and desktop clients, persistence, ingestion workers and intelligence modules will be added incrementally behind stable interfaces.
+See [frontend/README.md](frontend/README.md) for the web app and [backend/README.md](backend/README.md) for the API.
 
-## Repository status
+## Roadmap
 
-This repository is at the initial foundation stage. Features are planned until implemented and verified; the roadmap is not a claim that those capabilities already exist.
+1. Establish a reproducible development environment and CI.
+2. Connect the web application to the versioned API.
+3. Add PostgreSQL/PostGIS persistence and source provenance.
+4. Integrate and validate public data providers one by one.
+5. Expand global layers, event correlation, alerts and watchlists.
+6. Build ATLAS LIVE camera-source adapters with permission and licensing checks.
+7. Deliver the Windows desktop client using a shared backend.
 
 ## License
 
