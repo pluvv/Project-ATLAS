@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CircleMarker, MapContainer, Popup, TileLayer, useMap } from "react-leaflet";
 import type { LatLngBoundsExpression } from "leaflet";
 
@@ -12,7 +12,7 @@ const demoEvents: AtlasEvent[] = [
   {id:"EVT-005",title:"Tropical weather monitoring area",category:"Weather",region:"Bay of Bengal",lat:15.4,lon:88.1,severity:"Medium",time:"Demo · 1 hr ago",summary:"Example location for a future official meteorological source adapter."}
 ];
 const colors:Record<EventCategory,string>={Conflict:"#f28b82",Disaster:"#f4b860",Weather:"#72b7e5",Infrastructure:"#a78bfa"};
-function MapFocus({selected}:{selected:AtlasEvent|null}) { const map=useMap(); if(selected) map.flyTo([selected.lat,selected.lon],Math.max(map.getZoom(),4),{duration:.8}); return null; }
+function MapFocus({selected}:{selected:AtlasEvent|null}) { const map=useMap(); useEffect(()=>{ if(selected) map.flyTo([selected.lat,selected.lon],Math.max(map.getZoom(),4),{duration:.8}); },[map,selected?.id]); return null; }
 function EventMap({events,selected,onSelect}:{events:AtlasEvent[];selected:AtlasEvent|null;onSelect:(event:AtlasEvent)=>void}) {
   const bounds:LatLngBoundsExpression=[[-58,-175],[78,178]];
   return <MapContainer className="atlas-map" center={[22,12]} zoom={2} minZoom={2} maxZoom={12} maxBounds={bounds} worldCopyJump>
